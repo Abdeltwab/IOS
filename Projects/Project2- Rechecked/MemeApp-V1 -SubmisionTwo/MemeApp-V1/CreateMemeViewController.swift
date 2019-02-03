@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CreateMemeViewController.swift
 //  MemeApp-V1
 //
 //  Created by Abdeltwab Elhussin on 2/2/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController , UIImagePickerControllerDelegate , UINavigationControllerDelegate{
+class CreateMemeViewController : UIViewController , UIImagePickerControllerDelegate , UINavigationControllerDelegate{
 
     // the problem of cancel button
     // https://www.youtube.com/watch?v=6o4PmMywIA8
@@ -25,32 +25,25 @@ class ViewController: UIViewController , UIImagePickerControllerDelegate , UINav
     @IBOutlet weak var navigationbar: UINavigationBar!
     
     //MARK: Delegates
-    let topTxtFldDelegate = TopTxtFldDelegate()
-    let bottomTxtFldDelagte = BottomTxtFldDelegate();
+    let topTxtFldDelegate = TextFiledsDelegates()
+    let bottomTxtFldDelagte = TextFiledsDelegates();
     
-    //MARK: Model
-    struct Meme {
-        var topText : String
-        var bottomTxt: String
-        var OrginalImg : UIImage?
-        var memedImg : UIImage?
-    }
+    
     
     
     
     //MARK: Initial Configurations
-    func toolBarConfiguration()  {
-        
-    }
+    
     let textFieldAttributes : [NSAttributedString.Key:Any] = [
         NSAttributedString.Key.strokeColor : UIColor.black,
-        NSAttributedString.Key.foregroundColor : UIColor.red,
+        NSAttributedString.Key.foregroundColor : UIColor.white,
         //NSAttributedString.Key.backgroundColor : UIColor.black,
         NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 35)!,
-        NSAttributedString.Key.strokeWidth : -2.0
+        NSAttributedString.Key.strokeWidth : -2.0 ,
+        
     ]
     
-    func topTextFldInitConfigurtion() {
+    /*func topTextFldInitConfigurtion() {
         topTextField.text = "TOP"
         topTextField.textAlignment = .center
         topTextField.defaultTextAttributes = textFieldAttributes
@@ -60,31 +53,43 @@ class ViewController: UIViewController , UIImagePickerControllerDelegate , UINav
         bottomTextField.text = "BOTTOM"
         bottomTextField.textAlignment = .center
         bottomTextField.defaultTextAttributes = textFieldAttributes
+    }*/
+    
+    func setStyle(toTextField textField: UITextField) {
+        if textField == topTextField {
+            textField.text = "TOP"
+            textField.delegate = topTxtFldDelegate
+        }else if textField == bottomTextField {
+            textField.text = "Bottom"
+            textField.delegate = bottomTxtFldDelagte
+        }
+        //comon configuration
+        textField.textAlignment = .center
+        textField.defaultTextAttributes = textFieldAttributes
+        textField.adjustsFontSizeToFitWidth = true
     }
     
     
     //MARK: Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Connect delegates
-        topTextField.delegate = topTxtFldDelegate
-        bottomTextField.delegate = bottomTxtFldDelagte
+        // initial Configuration
+        cameraBarBtn.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        setStyle(toTextField: topTextField)
+        setStyle(toTextField: bottomTextField)
+        
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "xxx", style: .plain, target: self, action: #selector(cancelMeme))
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        // initial configurations
-        cameraBarBtn.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        topTextFldInitConfigurtion()
-        bottomTextFldInitConfigurtion()
         if imgView.image == nil {
             shareBarBtn.isEnabled = false
             cancelBarBtn.isEnabled = false
-        } else {
+        } /*else {
             shareBarBtn.isEnabled = true
             cancelBarBtn.isEnabled = true
-        }
+        }*/
         
         // subscribing to keyboard notifications
         subscribeToWrtingNotification()
@@ -97,19 +102,32 @@ class ViewController: UIViewController , UIImagePickerControllerDelegate , UINav
     }
     
     
+    
+    
     //MARK: PickImage
+    
+    func openImagePicker(_ type: UIImagePickerController.SourceType){
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.sourceType = type
+        present(picker, animated: true, completion: nil)
+    }
+    
+    
     @IBAction func picImgFromAlbum(_ sender: Any) {
-        let imagePickerController = UIImagePickerController()
+        openImagePicker(.photoLibrary)
+        /*let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.sourceType = .photoLibrary
-        present(imagePickerController, animated: true, completion: nil)
+        present(imagePickerController, animated: true, completion: nil)*/
     }
     
     @IBAction func picImgFromCamera(_ sender: Any) {
-        let cameraPickerController = UIImagePickerController()
+       openImagePicker(.camera)
+        /*let cameraPickerController = UIImagePickerController()
         cameraPickerController.delegate = self
         cameraPickerController.sourceType = .camera
-        present(cameraPickerController, animated: true, completion: nil)
+        present(cameraPickerController, animated: true, completion: nil)*/
     }
     
     //MARK: Image Picker Finishing
@@ -117,6 +135,9 @@ class ViewController: UIViewController , UIImagePickerControllerDelegate , UINav
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             self.imgView.image = image
+            //enbling share button
+            shareBarBtn.isEnabled = true
+            cancelBarBtn.isEnabled = true
         }
         dismiss(animated: true, completion: nil)
     }
@@ -146,7 +167,7 @@ class ViewController: UIViewController , UIImagePickerControllerDelegate , UINav
     }
     @objc func keyboardWillShow(_ notification:Notification) {
         if bottomTextField.isFirstResponder {
-            view.frame.origin.y -= getKeyboardHeight(notification)
+            view.frame.origin.y -= (0.5 * getKeyboardHeight(notification) )
         }
     }
     
@@ -210,8 +231,8 @@ class ViewController: UIViewController , UIImagePickerControllerDelegate , UINav
     // is not working ?? why
     @IBAction func cancelMeme(_ sender: Any) {
         self.imgView.image = nil
-        topTextFldInitConfigurtion()
-        bottomTextFldInitConfigurtion()
+        setStyle(toTextField: topTextField)
+        setStyle(toTextField: bottomTextField)
     }
     
     

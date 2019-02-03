@@ -30,6 +30,8 @@
 	<string>Just Testing</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Just Testing</string>
+	<key>NSCameraUsageDescription</key>
+	<string>I need to access your camera for testing sake </string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
