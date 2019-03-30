@@ -1,5 +1,9 @@
 # Pitch Perfect
 ## Project Description  
+![alt text](https://github.com/Abdeltwab/IOS/blob/master/Imges/pitchPErfectDescrption.png)
+![alt text](https://github.com/Abdeltwab/IOS/blob/master/Imges/pitchPerfectDesc2.png)
+
+
 ## Concpets Learned in this Project  
 
 1. Create a new project from existing iOS app templates
@@ -17,5 +21,8 @@
 7. Run the iOS simulator and download the app on a physical device
 
 8. Search documentation, resolve bugs, and read other people’s code
-## Screen shots  
+## Screen shots of My Work and Submisson   
 
+![alt text](https://github.com/Abdeltwab/IOS/blob/master/Imges/pitchPerfctscreen1.png)
+![alt text](https://github.com/Abdeltwab/IOS/blob/master/Imges/pitchPerscreen2.png)
+![alt text](https://github.com/Abdeltwab/IOS/blob/master/Imges/pitchPerfectres.png)
